@@ -1,0 +1,30 @@
+{
+  "vigente": "jp-2026-11",
+  "versoes": {
+    "jp-2026-11": {
+      "rotulo": "Leitura vigente · novembro de 2026",
+      "data": "2026-11-09",
+      "gabarito_orla": {
+        "regra": "Decreto 9.718/2021, art. 54, § 2º — linha tangente contínua",
+        "base_legal": "Constituição da Paraíba, art. 229; Decreto 9.718/2021, art. 54, § 2º",
+        "h0": 12.90, "hmax": 35.00, "faixa": 500, "inclinacao": 0.0442,
+        "formula": "H = 12,90 + 0,0442 × D (D até a testada da 1ª quadra, em metros)",
+        "ultimo_pavimento": "admitido onde a tangente supera a metade do seu pé-direito",
+        "nota": "O art. 62 da LUOS (LC 166/2024) foi declarado inconstitucional pelo TJPB em 21/01/2026. Aplica-se o art. 54 do Decreto 9.718/2021, como indicou o MPPB em 12/02/2026. O tema segue em revisão no Plano Diretor."
+      },
+      "pavimento": { "soleira": 0.15, "piso_a_piso": 2.80 },
+      "zonas": {
+        "ZH3": {
+          "nome": "Zona Habitacional 3", "conferido": true,
+          "ia_basico": 1.0, "ia_maximo": 6.0, "to": 0.50, "permeavel": 0.05,
+          "afast_frontal": 5.0, "afast_lateral": [1.5, 1.5, 1.5, 3.0], "progressivo": [3.0, 0.30],
+          "base_legal": "LUOS, LC 166/2024: arts. 53, 56–57, 65, 68, 74, 77 e Anexo V",
+          "status": "Índice máximo e quadros do Anexo V a conferir na versão consolidada da LUOS"
+        },
+        "ZCS3": { "nome": "Zona de Comércio e Serviços 3", "conferido": false },
+        "ZH1": { "nome": "Zona Habitacional 1", "conferido": false },
+        "ZEPA1": { "nome": "Zona Especial de Preservação Ambiental 1", "conferido": false, "nao_edificante": true }
+      }
+    }
+  }
+}

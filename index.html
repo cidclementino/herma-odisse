@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Herma · Leitura de lotes · Jardim Oceania</title>
+  <meta name="description" content="Herma: leitura pública e gratuita do potencial construtivo dos lotes de João Pessoa. Piloto: Jardim Oceania. Um projeto do Odisse, Estúdio de Arquitetura & Design.">
+  <link rel="icon" href="assets/marca/herma-selo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="vendor/maplibre/maplibre-gl.css">
+  <link rel="stylesheet" href="assets/css/herma.css">
+</head>
+<body>
+  <!-- ============ TRILHO (navegação principal) ============ -->
+  <nav class="trilho" aria-label="Navegação principal">
+    <a class="trilho-marca" href="#" data-aba="inicio" title="Herma">
+      <svg class="selo" viewBox="0 0 24 32" aria-hidden="true"><use href="#herma-selo"/></svg>
+    </a>
+    <button class="trilho-bt" data-aba="lote" title="Estudo do lote">
+      <svg viewBox="0 0 24 24"><path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M4 7l8 4 8-4M12 11v10"/></svg>
+      <span>Estudo do lote</span>
+    </button>
+    <button class="trilho-bt" data-aba="filtros" title="Filtros">
+      <svg viewBox="0 0 24 24"><path d="M4 5h16l-6 8v6l-4 2v-8z"/></svg>
+      <span>Filtros</span>
+    </button>
+    <button class="trilho-bt" data-aba="camadas" title="Camadas">
+      <svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg>
+      <span>Camadas</span>
+    </button>
+    <button class="trilho-bt" data-aba="salvos" title="Lotes salvos">
+      <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+      <span>Salvos</span><b class="contador" id="contSalvos" hidden>0</b>
+    </button>
+    <button class="trilho-bt" data-aba="bairro" title="O bairro">
+      <svg viewBox="0 0 24 24"><path d="M4 20V10l5-3v13M9 20V5l6-2v17M15 20v-9l5 2v7M3 20h18"/></svg>
+      <span>Bairro</span>
+    </button>
+    <div class="trilho-fim">
+      <button class="trilho-bt" data-aba="sobre" title="Sobre a Herma">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>
+        <span>Sobre</span>
+      </button>
+      <a class="por-odisse" href="https://odisse.com.br" target="_blank" rel="noopener" title="Odisse, Estúdio de Arquitetura & Design">
+        <small>um projeto</small>
+        <img src="assets/marca/odisse-logotipo-papel.svg" alt="Odisse">
+      </a>
+    </div>
+  </nav>
+
+  <!-- ============ PAINEL ============ -->
+  <aside class="painel" id="painel" aria-live="polite">
+    <button class="painel-fechar" id="painelFechar" aria-label="Recolher painel">
+      <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <div class="painel-alca" aria-hidden="true"></div>
+
+    <!-- INÍCIO -->
+    <section class="aba" data-aba="inicio">
+      <header class="aba-cab">
+        <p class="rotulo">Herma · piloto</p>
+        <h1 class="titulo-g">Jardim Oceania.</h1>
+        <p class="lead">O que a legislação permite construir em cada lote do bairro, lido no mapa. Gratuito, aberto e versionado pela norma de cada cálculo.</p>
+      </header>
+      <div class="numeros" id="numerosInicio"></div>
+      <div class="passos">
+        <div class="passo"><span class="num">01</span><p><b>Escolha um lote</b> no mapa ou pela busca. A ficha mostra zona, distância à orla, altura máxima e envelope legal.</p></div>
+        <div class="passo"><span class="num">02</span><p><b>Filtre</b> por terrenos vagos, área, altura ou pavimentos para encontrar oportunidades.</p></div>
+        <div class="passo"><span class="num">03</span><p><b>Aprofunde</b>: peça ao Odisse o estudo completo do terreno, com matrícula, volumetria, mercado e contexto.</p></div>
+      </div>
+      <div class="aviso">
+        <b>Estimativa, não laudo.</b> A geometria é cadastral (Filipeia/SEPLAN/PMJP) e o regime de altura da orla está em disputa judicial. Antes de decidir, confirme com matrícula, levantamento e consulta prévia.
+      </div>
+    </section>
+
+    <!-- ESTUDO DO LOTE -->
+    <section class="aba" data-aba="lote">
+      <div id="ficha" class="ficha-vazia">
+        <header class="aba-cab">
+          <p class="rotulo">Estudo do lote</p>
+          <h2 class="titulo-m">Selecione um lote.</h2>
+          <p class="lead">Clique em qualquer lote do mapa ou busque por rua, número ou código cadastral.</p>
+        </header>
+      </div>
+    </section>
+
+    <!-- FILTROS -->
+    <section class="aba" data-aba="filtros">
+      <header class="aba-cab">
+        <p class="rotulo">Filtros</p>
+        <h2 class="titulo-m">Encontrar terrenos.</h2>
+      </header>
+      <form id="formFiltros" class="filtros">
+        <label class="chk"><input type="checkbox" name="vago"> <span>Só terrenos vagos <small>(territoriais no cadastro)</small></span></label>
+        <label class="chk"><input type="checkbox" name="faixa"> <span>Só na faixa de 500 m da orla</span></label>
+        <fieldset class="campo">
+          <legend>Zona</legend>
+          <div class="chips" id="chipsZona"></div>
+        </fieldset>
+        <div class="campo duplo">
+          <label><span>Área mínima</span><input type="number" name="amin" min="0" step="50" placeholder="m²" inputmode="numeric"></label>
+          <label><span>Área máxima</span><input type="number" name="amax" min="0" step="50" placeholder="m²" inputmode="numeric"></label>
+        </div>
+        <label class="campo"><span>Pavimentos admitidos, no mínimo <output id="outPav">qualquer</output></span>
+          <input type="range" name="pav" min="0" max="20" value="0"></label>
+        <label class="campo"><span>Ordenar resultados por</span>
+          <select name="ordem">
+            <option value="area_to">Área construída estimada</option>
+            <option value="area">Área do lote</option>
+            <option value="h_testada">Altura máxima na testada</option>
+            <option value="dmin">Proximidade da orla</option>
+          </select></label>
+        <div class="filtros-acoes">
+          <button type="reset" class="bt">Limpar</button>
+        </div>
+      </form>
+      <div class="resultado-cab"><b id="nResultados">0</b> lotes</div>
+      <ol class="resultados" id="listaResultados"></ol>
+    </section>
+
+    <!-- CAMADAS -->
+    <section class="aba" data-aba="camadas">
+      <header class="aba-cab">
+        <p class="rotulo">Camadas</p>
+        <h2 class="titulo-m">O que ler no mapa.</h2>
+      </header>
+      <fieldset class="campo">
+        <legend>Cor dos lotes</legend>
+        <div class="opcoes" id="opTema">
+          <label><input type="radio" name="tema" value="altura" checked><span><b>Altura máxima</b><small>Gabarito da orla na testada</small></span></label>
+          <label><input type="radio" name="tema" value="pav"><span><b>Pavimentos</b><small>Admitidos pela altura, na frente do lote</small></span></label>
+          <label><input type="radio" name="tema" value="area_to"><span><b>Área construída estimada</b><small>Envelope com taxa de ocupação (ZH-3)</small></span></label>
+          <label><input type="radio" name="tema" value="zona"><span><b>Zoneamento 2024</b><small>Zona predominante do lote</small></span></label>
+          <label><input type="radio" name="tema" value="vago"><span><b>Vagos e edificados</b><small>Situação no cadastro municipal</small></span></label>
+        </div>
+      </fieldset>
+      <fieldset class="campo">
+        <legend>Sobreposições</legend>
+        <label class="chk"><input type="checkbox" data-camada="iso" checked> <span>Linhas de gabarito, a cada 50 m</span></label>
+        <label class="chk"><input type="checkbox" data-camada="faixa62"> <span>Faixas do art. 62 <small>(anulado, referência)</small></span></label>
+        <label class="chk"><input type="checkbox" data-camada="volumes"> <span>Volumes máximos em 3D <small>(altura na testada)</small></span></label>
+      </fieldset>
+      <fieldset class="campo">
+        <legend>Base</legend>
+        <div class="seg" id="segBase">
+          <button type="button" data-base="ruas" class="ativo">Ruas</button>
+          <button type="button" data-base="desenho">Desenho</button>
+          <button type="button" data-base="satelite">Satélite</button>
+        </div>
+      </fieldset>
+      <p class="nota">Lotes, zoneamento e faixas: Filipeia/SEPLAN/PMJP. Ruas: © OpenStreetMap, © CARTO. Satélite: Esri, Maxar.</p>
+    </section>
+
+    <!-- SALVOS -->
+    <section class="aba" data-aba="salvos">
+      <header class="aba-cab">
+        <p class="rotulo">Lotes salvos</p>
+        <h2 class="titulo-m">Comparar terrenos.</h2>
+        <p class="lead">Os lotes salvos ficam neste navegador. Compare lado a lado e peça um estudo de vários de uma vez.</p>
+      </header>
+      <div id="listaSalvos"></div>
+    </section>
+
+    <!-- BAIRRO -->
+    <section class="aba" data-aba="bairro">
+      <header class="aba-cab">
+        <p class="rotulo">O bairro</p>
+        <h2 class="titulo-m">Jardim Oceania no mercado.</h2>
+        <p class="lead">Faz parte do “Bessa” de mercado: o bairro mais procurado para compra em João Pessoa.</p>
+      </header>
+      <div id="bairroConteudo"></div>
+    </section>
+
+    <!-- SOBRE -->
+    <section class="aba" data-aba="sobre">
+      <header class="aba-cab">
+        <p class="rotulo">Sobre</p>
+        <h2 class="titulo-m">Herma.</h2>
+        <p class="lead">Na Grécia antiga, as hermas eram pilares com a cabeça de Hermes que orientavam viajantes e marcavam limites. A Herma orienta quem procura terreno e marca o limite do que a lei permite construir.</p>
+      </header>
+      <div class="texto">
+        <h3>Como a leitura é feita</h3>
+        <ol class="metodo">
+          <li><b>Lote.</b> Geometria do cadastro municipal. Lados encostados em outro lote são divisas; os demais, testadas.</li>
+          <li><b>Zona.</b> Zoneamento de 2024, pela maior sobreposição com o lote.</li>
+          <li><b>Distância à orla.</b> Medida até a testada da 1ª quadra, a borda voltada ao mar da faixa de 500 m.</li>
+          <li><b>Altura.</b> H = 12,90 + 0,0442 × D, até 35 m no fim da faixa. Cada pavimento entra onde a linha tangente supera a metade do seu pé-direito (2,80 m de piso a piso).</li>
+          <li><b>Envelope.</b> Afastamento frontal nas testadas, lateral e progressivo nas divisas, recorte pela altura; depois, taxa de ocupação por pavimento e índice máximo.</li>
+        </ol>
+        <h3>Versão da norma</h3>
+        <p id="sobreNorma"></p>
+        <h3>Limites</h3>
+        <p>A Herma é uma estimativa a partir de dados públicos. Não substitui matrícula, levantamento planialtimétrico, consulta prévia nem projeto. Parâmetros da ZCS-3 e da ZH-1 ainda estão em conferência; nessas zonas a leitura mostra só a altura.</p>
+        <h3>Fontes</h3>
+        <p>Base cartográfica: Filipeia/SEPLAN/PMJP (lotes, zoneamento 2024, faixas da orla), usada como insumo; os dados brutos não são redistribuídos. Legislação: LUOS (LC 166/2024), Plano Diretor (LC 164/2024), Decreto 9.718/2021. Mercado: FipeZap, DataZAP, Consult.</p>
+        <div class="assina">
+          <img src="assets/marca/odisse-logotipo.svg" alt="Odisse">
+          <p>Odisse, Estúdio de Arquitetura & Design · João Pessoa<br><a href="mailto:contato@odisse.com.br">contato@odisse.com.br</a> · <a href="https://wa.me/5583991223088" target="_blank" rel="noopener">+55 83 99122 3088</a></p>
+        </div>
+      </div>
+    </section>
+  </aside>
+
+  <!-- ============ MAPA ============ -->
+  <main class="palco">
+    <div id="mapa" aria-label="Mapa de lotes do Jardim Oceania"></div>
+
+    <div class="busca">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+      <input id="busca" type="search" placeholder="Rua, número ou código cadastral" autocomplete="off" aria-label="Buscar lote">
+      <ul class="busca-res" id="buscaRes" hidden></ul>
+    </div>
+
+    <div class="ctrl">
+      <button id="bt3d" class="ctrl-bt" title="Alternar 2D / 3D">3D</button>
+      <button id="btNorte" class="ctrl-bt" title="Voltar ao bairro">
+        <svg viewBox="0 0 24 24"><path d="M12 3l5 16-5-3.5L7 19z"/></svg>
+      </button>
+    </div>
+
+    <div class="legenda" id="legenda"></div>
+    <div class="selo-norma" id="seloNorma"></div>
+  </main>
+
+  <!-- ============ SOLICITAR ESTUDO ============ -->
+  <dialog id="dlgEstudo" class="dlg">
+    <form method="dialog" id="formEstudo">
+      <header>
+        <p class="rotulo">Solicitar estudo aprofundado</p>
+        <h2 class="titulo-m" id="dlgTitulo">Este terreno.</h2>
+        <button class="dlg-x" value="cancel" aria-label="Fechar">×</button>
+      </header>
+      <div class="dlg-corpo">
+        <fieldset class="campo">
+          <legend>O que você quer saber</legend>
+          <div class="niveis" id="niveis"></div>
+        </fieldset>
+        <div class="campo duplo">
+          <label><span>Nome</span><input name="nome" required autocomplete="name"></label>
+          <label><span>Você é</span>
+            <select name="perfil">
+              <option>Incorporador ou construtor</option>
+              <option>Proprietário do terreno</option>
+              <option>Corretor ou imobiliária</option>
+              <option>Investidor</option>
+              <option>Arquiteto ou engenheiro</option>
+              <option>Outro</option>
+            </select></label>
+        </div>
+        <div class="campo duplo">
+          <label><span>E-mail</span><input name="email" type="email" autocomplete="email"></label>
+          <label><span>Telefone</span><input name="tel" type="tel" autocomplete="tel"></label>
+        </div>
+        <label class="campo"><span>Mensagem <small>(opcional)</small></span><textarea name="msg" rows="3" placeholder="Prazo, programa pretendido, situação da documentação…"></textarea></label>
+        <p class="nota">Ao enviar, abrimos o WhatsApp ou o e-mail já com os dados do lote. Nada é guardado neste site.</p>
+      </div>
+      <footer>
+        <button type="button" class="bt" id="btEmail">Enviar por e-mail</button>
+        <button type="button" class="bt forte" id="btWhats">Enviar pelo WhatsApp</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="herma-selo" viewBox="0 0 24 32">
+      <circle cx="12" cy="5.6" r="4.1"/>
+      <path d="M6.6 11.6h10.8l-1.7 15.6H8.3z"/>
+      <rect x="4.6" y="28.3" width="14.8" height="2.6" rx=".4"/>
+    </symbol>
+  </svg>
+
+  <script src="vendor/maplibre/maplibre-gl.js"></script>
+  <script type="module" src="assets/js/herma.js"></script>
+</body>
+</html>
