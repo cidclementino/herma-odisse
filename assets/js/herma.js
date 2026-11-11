@@ -556,7 +556,8 @@ function montarDialogo() {
     const ls = lotesPedido.map((id) => { const p = S.porId.get(id).properties; return `• ${p.logr}${p.num ? ', ' + p.num : ''} (setor ${p.setor}, quadra ${p.quadra}, lote ${p.lote}; ${fmt(p.area)} m²)`; });
     const link = location.href.split('#')[0] + '#lote=' + lotesPedido[0];
     return [
-      'Olá, Odisse. Vim pela Herma e quero um estudo aprofundado.',
+      // o código entre colchetes identifica a origem do pedido no funil do vendas.odisse
+      `Olá, Odisse. Vim pela Herma e quero um estudo aprofundado. [Herma ${lotesPedido[0]}${lotesPedido.length > 1 ? ' +' + (lotesPedido.length - 1) : ''}]`,
       '', `Terreno${ls.length > 1 ? 's' : ''} no Jardim Oceania:`, ...ls,
       '', `Níveis de interesse: ${niveis.join('; ') || 'a definir'}`,
       `Nome: ${F.get('nome') || ''}`, `Perfil: ${F.get('perfil')}`,
